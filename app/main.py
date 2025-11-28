@@ -1,25 +1,36 @@
-# backend/app/main.py
 from fastapi import FastAPI
-from app.database import database, engine, metadata
-from app.routers.word import router as word_router
-from app.routers.validate import router as validate_router
+from fastapi.middleware.cors import CORSMiddleware
+from app.api import word, validate, summary
+from app.config import settings
 
-metadata.create_all(engine)
+app = FastAPI(title=settings.app_name, version=settings.api_version)
 
-app = FastAPI(title="Worddee.ai API")
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.on_event("startup")
-async def startup():
-    await database.connect()
-
-@app.on_event("shutdown")
-async def shutdown():
-    await database.disconnect()
-
-# รวม routers
-app.include_router(word_router)
-app.include_router(validate_router)
+# Include routers
+app.include_router(word.router, prefix="/api", tags=["Word"])
+app.include_router(validate.router, prefix="/api", tags=["Validation"])
+app.include_router(summary.router, prefix="/api", tags=["Summary"])
 
 @app.get("/")
-def root():
-    return {"message": "Worddee backend running!"}
+async def root():
+    return {
+        "message": "Welcome to Worddee.ai API",
+        "version": settings.api_version,
+        "endpoints": {
+            "word": "/api/word",
+            "validate": "/api/validate-sentence",
+            "summary": "/api/summary"
+        }
+    }
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
