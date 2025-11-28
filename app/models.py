@@ -1,3 +1,4 @@
+# backend/app/models.py
 from sqlalchemy import Table, Column, Integer, String, Text, Float, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from app.database import metadata
@@ -7,10 +8,9 @@ words = Table(
     metadata,
     Column("id", Integer, primary_key=True),
     Column("word", String(100), nullable=False),
-    Column("pos", String(50)),             
+    Column("pos", String(50)),          
     Column("meaning", Text),
-    Column("created_at", DateTime, server_default=func.now())
-)
+    Column("created_at", DateTime, server_default=func.now()))
 
 attempts = Table(
     "attempts",
@@ -22,5 +22,4 @@ attempts = Table(
     Column("score", Float),
     Column("level", String(50)),
     Column("suggestion", Text),
-    Column("created_at", DateTime, server_default=func.now())
-)
+    Column("created_at", DateTime, server_default=func.now()))

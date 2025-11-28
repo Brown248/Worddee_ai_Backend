@@ -1,3 +1,4 @@
+# backend/app/main.py
 from fastapi import FastAPI
 from app.database import database, engine, metadata
 from app.routers.word import router as word_router
@@ -15,6 +16,7 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
+# รวม routers
 app.include_router(word_router)
 app.include_router(validate_router)
 

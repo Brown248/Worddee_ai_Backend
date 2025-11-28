@@ -1,0 +1,16 @@
+# CORE FRAMEWORK
+fastapi
+uvicorn[standard]
+
+# DATABASE (ORM & Driver)
+sqlalchemy
+databases
+psycopg2-binary
+
+# UTILITIES & SECURITY
+pydantic
+python-dotenv
+httpx
+
+# THIRD-PARTY API
+openai
